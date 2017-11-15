@@ -1,3 +1,5 @@
+import java.lang.*;
+
 class sportsManipulation {
   private static final int TEAMS_NUM = 8;
   private static final int GROUP_SIZE = 4;
@@ -32,36 +34,34 @@ class sportsManipulation {
 
   class group {
     int id;
-    team[] teams[GROUP_SIZE];
+    team[] teams;
 
     group(int n_id) {
       id = n_id;
       teams = new team[GROUP_SIZE];
-    }   
+    }
   }
 
   class league {
     group[] groups;
-    bool[][] strength_graph;
-    bool[][] positive_manipulators;
+    Boolean[][] strength_graph;
+    Boolean[][] positive_manipulators;
     int manipulated_team_id;
 
     league(int n_manipulated_team_id) {
       manipulated_team_id = n_manipulated_team_id;
       groups = new group[GROUPS_NUM];
-      strength_graph = new bool[TEAMS_NUM][TEAMS_NUM];
-      positive_manipulators = new bool[TEAMS_NUM][TEAMS_NUM];
+      strength_graph = new Boolean[TEAMS_NUM][TEAMS_NUM];
+      positive_manipulators = new Boolean[TEAMS_NUM][TEAMS_NUM];
     }
   }
 
-  public static int algorithm_init(league lg, int argc, char[][] argv) {
+  public static int algorithm_init(league lg, int argc, String[] argv) {
       int g, t1, t2;
       for (g = 0; g < GROUPS_NUM; g++) {
-          lg.groups[g] = malloc(sizeof(group));
-          lg.groups[g].id = g + 1;
+          lg.groups[g] = new group(g + 1);
           for (t1 = 0; t1 < GROUP_SIZE; t1++) {
-              lg.groups[g].teams[t1] = malloc(sizeof(team));
-              lg.groups[g].teams[t1].id = g * GROUP_SIZE + t1;
+              lg.groups[g].teams[t1] = new team(g * GROUP_SIZE + t1);
           }
       }
       for (t1 = 0; t1 < TEAMS_NUM; t1++) {
@@ -75,12 +75,12 @@ class sportsManipulation {
           }
       }
       if (argc > 1) {
-          sscanf(argv[1], "%d", debug_level);
+          debug_level = Integer.parseInt(argv[1]);
           if (argc > 2) {
-              sscanf(argv[2], "%d", lg.manipulated_team_id);
+              lg.manipulated_team_id = Integer.parseInt(argv[2]);
               int i, j;
               for (i = 3; i < argc; i++) {
-                  sscanf(argv[i], "%d", j);
+                  j = Integer.parseInt(argv[i]);
                   lg.positive_manipulators[j][lg.manipulated_team_id] = true;
                   LOGD("team %d will manipulate for win of team %d\n", j, lg.manipulated_team_id);
               }
@@ -89,7 +89,7 @@ class sportsManipulation {
       return 0;
   }
 
-  public static bool game_winner_first_win(league lg, int tm1, int tm2) {
+  public static Boolean game_winner_first_win(league lg, int tm1, int tm2) {
       if (lg.positive_manipulators[tm1][tm2] == true) {
           LOGD("%d wins %d due to manipulation\n", tm2, tm1);
           return false;
@@ -106,7 +106,7 @@ class sportsManipulation {
       return false;
   }
 
-  public static bool first_team_best_score(league lg, team tm1, team tm2) {
+  public static Boolean first_team_best_score(league lg, team tm1, team tm2) {
       if (tm1.score > tm2.score) {
           LOGD("%d before %d due to score\n", tm1.id, tm2.id);
           return true;
@@ -166,8 +166,8 @@ class sportsManipulation {
       return 0;
   }
 
-  public static bool calculate_tree(league lg) {
-      team tree_teams[GROUPS_NUM * 2];
+  public static Boolean calculate_tree(league lg) {
+      team[] tree_teams = new team[GROUPS_NUM * 2];
       int g, t = 0;
       for (g = 0; g < GROUPS_NUM; g++, t++) {
           if (g %2 == 0) {
@@ -197,7 +197,7 @@ class sportsManipulation {
       }
   }
 
-  public static bool try_swap_two_firsts_on_tm_group(league lg) {
+  public static Boolean try_swap_two_firsts_on_tm_group(league lg) {
       return false;
   }
 
@@ -217,7 +217,7 @@ class sportsManipulation {
       return 0;
   }
 
-  public static int main(int argc, char[][] argv) {
+  public static int main(int argc, String[] argv) {
       league lg;
       algorithm_init(lg, argc, argv);
       algorithm_execute(lg);
