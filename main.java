@@ -54,7 +54,7 @@ class league {
     positive_manipulators = new Boolean[TEAMS_NUM][TEAMS_NUM];
   }
 
-  public int algorithm_init(int argc, String[] argv) {
+  public int algorithm_init(String[] argv) {
       int g, t1, t2;
       for (g = 0; g < GROUPS_NUM; g++) {
           groups[g] = new group(g + 1, GROUP_SIZE);
@@ -72,12 +72,12 @@ class league {
               positive_manipulators[t1][t2] = false;
           }
       }
-      if (argc > 1) {
+      if (argv.length > 1) {
           debug_level = Integer.parseInt(argv[1]);
-          if (argc > 2) {
+          if (argv.length > 2) {
               manipulated_team_id = Integer.parseInt(argv[2]);
               int i, j;
-              for (i = 3; i < argc; i++) {
+              for (i = 3; i < argv.length; i++) {
                   j = Integer.parseInt(argv[i]);
                   positive_manipulators[j][manipulated_team_id] = true;
                   LOGD("team %d will manipulate for win of team %d\n", j, manipulated_team_id);
@@ -217,10 +217,9 @@ class league {
 }
 
 class sportsManipulation {
-  public static int main(int argc, String[] argv) {
+  public static void main(String[] argv) {
       league lg = new league();
-      lg.algorithm_init(argc, argv);
+      lg.algorithm_init(argv);
       lg.algorithm_execute();
-      return 0;
   }
 }
