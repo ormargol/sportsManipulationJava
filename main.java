@@ -22,12 +22,13 @@ class group {
 
 class league {
 
-  static final int TEAMS_NUM = 8;
+    static final int TEAMS_NUM = 8;
   static final int GROUP_SIZE = 4;
   static final int GROUPS_NUM = TEAMS_NUM / GROUP_SIZE;
   static final int LOG_LVL_DEBUG = 2;
   static final int LOG_LVL_TEST = 1;
-  static int debug_level;
+    public static final int SCORE_FOR_WINNING = 3;
+    static int debug_level;
 
   public static void LOG(final int lvl, final String in, final Object... args) {
     if (lvl <= debug_level) {
@@ -73,11 +74,14 @@ class league {
           }
       }
       if (argv.length > 1) {
-          debug_level = Integer.parseInt(argv[1]);
-          if (argv.length > 2) {
-              manipulated_team_id = Integer.parseInt(argv[2]);
+          // debug level: 0- don't show any logs, 1- testing mode 2- show all logs
+          debug_level = Integer.parseInt(argv[0]);
+          if (argv.length > 1) {
+              // the id of the team that we want to check if won using manipulations
+              manipulated_team_id = Integer.parseInt(argv[1]);
               int i, j;
-              for (i = 3; i < argv.length; i++) {
+              // all the rest arguments are ids of the coalition teams
+              for (i = 2; i < argv.length; i++) {
                   j = Integer.parseInt(argv[i]);
                   positive_manipulators[j][manipulated_team_id] = true;
                   LOGD("team %d will manipulate for win of team %d\n", j, manipulated_team_id);
@@ -137,9 +141,9 @@ class league {
           for (t1 = 0; t1 < GROUP_SIZE; t1++) {
               for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
                   if (game_winner_first_win(groups[g].teams[t1].id, groups[g].teams[t2].id) == true) {
-                      groups[g].teams[t1].score += 3;
+                      groups[g].teams[t1].score += SCORE_FOR_WINNING;
                   } else {
-                      groups[g].teams[t2].score += 3;
+                      groups[g].teams[t2].score += SCORE_FOR_WINNING;
                   }
               }
           }
@@ -223,3 +227,6 @@ class sportsManipulation {
       lg.algorithm_execute();
   }
 }
+
+// what to do about TEKO on table score ?
+// how to build the cup tree ? who's against who ?
