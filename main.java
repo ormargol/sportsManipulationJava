@@ -1,6 +1,9 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 class team {
   int id;
@@ -223,14 +226,27 @@ class league {
 
 class sportsManipulation {
   public static void main(String[] argv) {
-      int logLevel = 1;
-      int teamToBeWinner = 7;
-      List<Integer> coalition = new ArrayList<>();
-      coalition.add(0);
-      coalition.add(1);
-      coalition.add(5);
-      coalition.add(6);
-      run(logLevel, teamToBeWinner, coalition);
+      List<String> dataFromFile = readFile("test_plan.txt");
+
+      for (String rowData: dataFromFile) {
+          if (rowData.startsWith("#")) {
+              continue;
+          }
+          Scanner scanner = new Scanner(rowData);
+          List<Integer> list = new ArrayList<Integer>();
+          while (scanner.hasNextInt()) {
+              list.add(scanner.nextInt());
+          }
+
+          int logLevel = 1;
+          int teamToBeWinner = list.get(0);
+          List<Integer> coalition = new ArrayList<>();
+          for (int i=1; i<list.size(); i++) {
+              coalition.add(list.get(i));
+          }
+
+          run(logLevel, teamToBeWinner, coalition);
+      }
   }
 
   public static void run (int logLevel, int teamWantedToBeWinner, List<Integer> coalitionList) {
@@ -238,6 +254,28 @@ class sportsManipulation {
       lg.algorithm_init(logLevel, teamWantedToBeWinner, coalitionList);
       lg.algorithm_execute();
   }
+
+    public static List<String> readFile(String filename)
+    {
+        List<String> records = new ArrayList<String>();
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                records.add(line);
+            }
+            reader.close();
+            return records;
+        }
+        catch (Exception e)
+        {
+            System.err.format("Exception occurred trying to read '%s'.", filename);
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 
 // what to do about TEKO on table score ?
