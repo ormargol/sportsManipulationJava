@@ -1,4 +1,6 @@
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class team {
   int id;
@@ -21,7 +23,6 @@ class group {
 }
 
 class league {
-
     static final int TEAMS_NUM = 8;
   static final int GROUP_SIZE = 4;
   static final int GROUPS_NUM = TEAMS_NUM / GROUP_SIZE;
@@ -55,7 +56,7 @@ class league {
     positive_manipulators = new Boolean[TEAMS_NUM][TEAMS_NUM];
   }
 
-  public int algorithm_init(String[] argv) {
+  public int algorithm_init(int logLevel, int teamWantedToBeWinner, List<Integer> coalitionList) {
       int g, t1, t2;
       for (g = 0; g < GROUPS_NUM; g++) {
           groups[g] = new group(g + 1, GROUP_SIZE);
@@ -73,20 +74,16 @@ class league {
               positive_manipulators[t1][t2] = false;
           }
       }
-      if (argv.length > 1) {
-          // debug level: 0- don't show any logs, 1- testing mode 2- show all logs
-          debug_level = Integer.parseInt(argv[0]);
-          if (argv.length > 1) {
-              // the id of the team that we want to check if won using manipulations
-              manipulated_team_id = Integer.parseInt(argv[1]);
-              int i, j;
-              // all the rest arguments are ids of the coalition teams
-              for (i = 2; i < argv.length; i++) {
-                  j = Integer.parseInt(argv[i]);
-                  positive_manipulators[j][manipulated_team_id] = true;
-                  LOGD("team %d will manipulate for win of team %d\n", j, manipulated_team_id);
-              }
-          }
+
+      // debug level: 0- don't show any logs, 1- testing mode 2- show all logs
+      debug_level = logLevel;
+
+      // the id of the team that we want to check if won using manipulations
+      manipulated_team_id = teamWantedToBeWinner;
+      // all the rest arguments are ids of the coalition teams
+      for (Integer coalitionTeamId:coalitionList) {
+          positive_manipulators[coalitionTeamId][manipulated_team_id] = true;
+          LOGD("team %d will manipulate for win of team %d\n", coalitionTeamId, manipulated_team_id);
       }
       return 0;
   }
@@ -226,8 +223,19 @@ class league {
 
 class sportsManipulation {
   public static void main(String[] argv) {
+      int logLevel = 1;
+      int teamToBeWinner = 7;
+      List<Integer> coalition = new ArrayList<>();
+      coalition.add(0);
+      coalition.add(1);
+      coalition.add(5);
+      coalition.add(6);
+      run(logLevel, teamToBeWinner, coalition);
+  }
+
+  public static void run (int logLevel, int teamWantedToBeWinner, List<Integer> coalitionList) {
       league lg = new league();
-      lg.algorithm_init(argv);
+      lg.algorithm_init(logLevel, teamWantedToBeWinner, coalitionList);
       lg.algorithm_execute();
   }
 }
