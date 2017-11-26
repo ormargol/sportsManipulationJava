@@ -125,11 +125,15 @@ class league {
           LOGD("%d before %d due to manipulation\n", tm1.id, tm2.id);
           return true;
       }
+
+      // it's TEKO and no team manipulate for the other one
       if (strength_graph[tm1.id][tm2.id] == true) {
+          // so the more strength team tm1 will be above due to it's ability to score more goals
           LOGD("%d before %d due to strength\n", tm1.id, tm2.id);
           return true;
       }
       LOGD("%d before %d due to strength\n", tm2.id, tm1.id);
+      // so the more strength team tm2 will be above due to it's ability to score more goals
       return false;
   }
 
