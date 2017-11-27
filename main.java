@@ -230,6 +230,10 @@ class sportsManipulation {
         int passedTestCases = 0;
         int testCases = 0;
         boolean isBugFound = false;
+        List<List<Integer>> minimalCoalitions = new List<List<Integer>>();
+        for (int index = 1; index <= TEAMS_NUM; index++) {
+            minimalCoalitions.get(index) = new List<Integer>();
+        }
         for (String rowData : dataFromFile) {
             if (rowData.startsWith("#")) {
                 continue;
@@ -247,25 +251,70 @@ class sportsManipulation {
             for (int i = 1; i < list.size(); i++) {
                 coalition.add(list.get(i));
             }
-
-            boolean ans = run(logLevel, teamToBeWinner, coalition);
-
-            if (ans) {
-                passedTestCases++;
-            } else {
-                if (!isBugFound) {
-                    isBugFound = true;
-                    logLevel = 2;
-                    teamToBeWinner = list.get(0);
-                    coalition = new ArrayList<>();
-                    for (int i = 1; i < list.size(); i++) {
-                        coalition.add(list.get(i));
+            minimalCoalitions.get(teamToBeWinner).add(coalition);
+        }
+        for (int index = 1; index < TEAMS_NUM; index++) {
+            for (ArrayList<Integer> coltn in optionalCoallitions(index)) {
+                if (expectedLeagueResult(index, coltn, minimalCoalitions) == run(0, index, coltn)) {
+                    passedTestCases++;
+                } else {
+                    if (!isBugFound) {
+                       isBugFound = true;
+                       run(2, index, coltn);
                     }
-                    ans = run(logLevel, teamToBeWinner, coalition);
                 }
             }
         }
         System.out.println("passed " + passedTestCases +  " tests out of " + testCases);
+    }
+
+    public static boolean tryIncreaseArray(int teamToBeWinner, boolean[] teams) {
+        for (int i = 1; i < teams.length; i++) {
+            if (i != teamToBeWinner) {
+                if (!teams[i]) {
+                    teams[i] = true;
+                    return true;
+                }
+                teams[i] = false;
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<Integer> calculateCoalition(int teamToBeWinner, boolean[] teams) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        for (int i = 1; i < TEANS_NUM; i++) {
+            if (i != teamToBeWinner && teams[i]) {
+                res.add(i);
+            }
+        }
+    }
+
+    public static ArrayList<ArrayList<Integer>> optionalCoallitions(int teamToBeWinner) {
+        boolean[] teams = new boolean[TEAMS_NUM]{false};
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        do {
+            res.add(calculateCoalition(teamToBeWinner, teams));
+        } while (tryIncreaseArray(teamToBeWinner, teams));
+        return res;
+    }
+
+    public static boolean coalitionContainsMinimal(List<Integer> tested, List<Integer> minimal) {
+        for (Integer i in minimal) {
+            if (!tested.Contains(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean expectedLeagueResult(int teamToBeWinner, List<Integer> coalition, List<List<Integer>> minimalCoalitions) {
+        for (List<Integer> coltn in minimalCoallitions.get(teamToBeWinner)) {
+            if (coalitionContainsMinimal(coalition, coltn) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean run(int logLevel, int teamWantedToBeWinner, List<Integer> coalitionList) {
