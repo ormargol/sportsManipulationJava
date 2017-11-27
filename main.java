@@ -230,9 +230,9 @@ class sportsManipulation {
         int passedTestCases = 0;
         int testCases = 0;
         boolean isBugFound = false;
-        List<List<Integer>> minimalCoalitions = new List<List<Integer>>();
-        for (int index = 1; index <= TEAMS_NUM; index++) {
-            minimalCoalitions.get(index) = new List<Integer>();
+        ArrayList<ArrayList<Integer>> minimalCoalitions = new ArrayList<ArrayList<Integer>>();
+        for (int index = 1; index <= league.TEAMS_NUM; index++) {
+            minimalCoalitions.add(index, new ArrayList<Integer>());
         }
         for (String rowData : dataFromFile) {
             if (rowData.startsWith("#")) {
@@ -247,14 +247,14 @@ class sportsManipulation {
 
             int logLevel = 0;
             int teamToBeWinner = list.get(0);
-            List<Integer> coalition = new ArrayList<>();
+            List<Integer> coalition = new ArrayList<Integer>();
             for (int i = 1; i < list.size(); i++) {
                 coalition.add(list.get(i));
             }
             minimalCoalitions.get(teamToBeWinner).add(coalition);
         }
         for (int index = 1; index < TEAMS_NUM; index++) {
-            for (ArrayList<Integer> coltn in optionalCoallitions(index)) {
+            for (ArrayList<Integer> coltn : optionalCoallitions(index)) {
                 if (expectedLeagueResult(index, coltn, minimalCoalitions) == run(0, index, coltn)) {
                     passedTestCases++;
                 } else {
@@ -283,7 +283,7 @@ class sportsManipulation {
 
     public static ArrayList<Integer> calculateCoalition(int teamToBeWinner, boolean[] teams) {
         ArrayList<Integer> res = new ArrayList<Integer>();
-        for (int i = 1; i < TEANS_NUM; i++) {
+        for (int i = 1; i < league.TEANS_NUM; i++) {
             if (i != teamToBeWinner && teams[i]) {
                 res.add(i);
             }
@@ -291,7 +291,8 @@ class sportsManipulation {
     }
 
     public static ArrayList<ArrayList<Integer>> optionalCoallitions(int teamToBeWinner) {
-        boolean[] teams = new boolean[TEAMS_NUM]{false};
+        boolean[] teams = new boolean[TEAMS_NUM];
+        Arrays.fill(teams, false);
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
         do {
             res.add(calculateCoalition(teamToBeWinner, teams));
@@ -300,7 +301,7 @@ class sportsManipulation {
     }
 
     public static boolean coalitionContainsMinimal(List<Integer> tested, List<Integer> minimal) {
-        for (Integer i in minimal) {
+        for (Integer i : minimal) {
             if (!tested.Contains(i)) {
                 return false;
             }
@@ -309,8 +310,8 @@ class sportsManipulation {
     }
 
     public static boolean expectedLeagueResult(int teamToBeWinner, List<Integer> coalition, List<List<Integer>> minimalCoalitions) {
-        for (List<Integer> coltn in minimalCoallitions.get(teamToBeWinner)) {
-            if (coalitionContainsMinimal(coalition, coltn) {
+        for (List<Integer> coltn : minimalCoalitions.get(teamToBeWinner)) {
+            if (coalitionContainsMinimal(coalition, coltn)) {
                 return true;
             }
         }
@@ -326,7 +327,7 @@ class sportsManipulation {
     }
 
     public static List<String> readFile(String filename) {
-        List<String> records = new ArrayList<>();
+        List<String> records = new ArrayList<String>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
