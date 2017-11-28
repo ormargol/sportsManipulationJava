@@ -252,7 +252,7 @@ class sportsManipulation {
             }
             minimalCoalitions.get(teamToBeWinner).add(coalition);
         }
-        for (int index = 1; index < league.TEAMS_NUM; index++) {
+        for (int index = 0; index < league.TEAMS_NUM; index++) {
             for (ArrayList<Integer> coltn : optionalCoallitions(index)) {
                 testCases++;
                 if (expectedLeagueResult(index, coltn, minimalCoalitions) == run(0, index, coltn)) {
@@ -269,7 +269,7 @@ class sportsManipulation {
     }
 
     public static boolean tryIncreaseArray(int teamToBeWinner, boolean[] teams) {
-        for (int i = 1; i < teams.length; i++) {
+        for (int i = 0; i < teams.length; i++) {
             if (i != teamToBeWinner) {
                 if (!teams[i]) {
                     teams[i] = true;
@@ -283,7 +283,7 @@ class sportsManipulation {
 
     public static ArrayList<Integer> calculateCoalition(int teamToBeWinner, boolean[] teams) {
         ArrayList<Integer> res = new ArrayList<Integer>();
-        for (int i = 1; i < league.TEAMS_NUM; i++) {
+        for (int i = 0; i < league.TEAMS_NUM; i++) {
             if (i != teamToBeWinner && teams[i]) {
                 res.add(i);
             }
@@ -293,7 +293,7 @@ class sportsManipulation {
 
     public static ArrayList<ArrayList<Integer>> optionalCoallitions(int teamToBeWinner) {
         boolean[] teams = new boolean[league.TEAMS_NUM];
-        for (int i = 1; i < league.TEAMS_NUM; i++) {
+        for (int i = 0; i < league.TEAMS_NUM; i++) {
             teams[i] = false;
         }
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
