@@ -238,7 +238,6 @@ class sportsManipulation {
             if (rowData.startsWith("#")) {
                 continue;
             }
-            testCases++;
             Scanner scanner = new Scanner(rowData);
             List<Integer> list = new ArrayList<Integer>();
             while (scanner.hasNextInt()) {
@@ -255,6 +254,7 @@ class sportsManipulation {
         }
         for (int index = 1; index < league.TEAMS_NUM; index++) {
             for (ArrayList<Integer> coltn : optionalCoallitions(index)) {
+                testCases++;
                 if (expectedLeagueResult(index, coltn, minimalCoalitions) == run(0, index, coltn)) {
                     passedTestCases++;
                 } else {
