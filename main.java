@@ -99,6 +99,9 @@ class league {
             LOGD("%d wins %d due to manipulation\n", tm1, tm2);
             return true;
         }
+        //TODO:  what about scores ???
+        //TODO: no consistent rule for 3 with same score that have circle by this func: 1 before 2, 2 before 3, 3 before 1!
+
         if (strength_graph[tm1][tm2] == true) {
             LOGD("%d wins %d due to strength\n", tm1, tm2);
             return true;
