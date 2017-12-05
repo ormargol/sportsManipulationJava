@@ -157,16 +157,16 @@ class league {
                 for (t1 = 0; t1 < GROUP_SIZE; t1++) {
                     for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
                         for (t3 = t2 + 1; t3 < GROUP_SIZE; t3++) {
-                            if ((game_winner_first_win(groups[group].teams[t1].id, groups[group].teams[t2].id)) &&
-                            (game_winner_first_win(groups[group].teams[t2].id, groups[group].teams[t3].id)) &&
-                                    (game_winner_first_win(groups[group].teams[t3].id, groups[group].teams[t1].id)))
+                            if ((first_team_best_score(groups[group].teams[t1], groups[group].teams[t2])) &&
+                            (first_team_best_score(groups[group].teams[t2], groups[group].teams[t3])) &&
+                                    (first_team_best_score(groups[group].teams[t3], groups[group].teams[t1])))
                             {
                                 LOGT("Error");
                             }
 
-                            if ((game_winner_first_win(groups[group].teams[t1].id, groups[group].teams[t3].id)) &&
-                                    (game_winner_first_win(groups[group].teams[t3].id, groups[group].teams[t2].id)) &&
-                                    (game_winner_first_win(groups[group].teams[t2].id, groups[group].teams[t1].id)))
+                            if ((first_team_best_score(groups[group].teams[t1], groups[group].teams[t3])) &&
+                                    (first_team_best_score(groups[group].teams[t3], groups[group].teams[t2])) &&
+                                    (first_team_best_score(groups[group].teams[t2], groups[group].teams[t1])))
                             {
                                 LOGT("Error");
                             }
