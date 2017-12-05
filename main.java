@@ -140,7 +140,7 @@ class league {
     }
 
     private int calculate_groups_scores() {
-        int g, t1, t2, t3;
+        int g, t1, t2, t3, group;
         team temp;
         for (g = 0; g < GROUPS_NUM; g++) {
             LOGD("GROUP %d - calculate winners:\n", g);
@@ -153,20 +153,20 @@ class league {
                     }
                 }
             }
-            for (g = 0; g < GROUPS_NUM; g++) {
+            for (group = 0; group < GROUPS_NUM; group++) {
                 for (t1 = 0; t1 < GROUP_SIZE; t1++) {
                     for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
                         for (t3 = t2 + 1; t3 < GROUP_SIZE; t3++) {
-                            if ((game_winner_first_win(groups[g].teams[t1].id, groups[g].teams[t2].id)) &&
-                            (game_winner_first_win(groups[g].teams[t2].id, groups[g].teams[t3].id)) &&
-                                    (game_winner_first_win(groups[g].teams[t3].id, groups[g].teams[t1].id)))
+                            if ((game_winner_first_win(groups[group].teams[t1].id, groups[group].teams[t2].id)) &&
+                            (game_winner_first_win(groups[group].teams[t2].id, groups[group].teams[t3].id)) &&
+                                    (game_winner_first_win(groups[group].teams[t3].id, groups[group].teams[t1].id)))
                             {
                                 LOGT("Error");
                             }
 
-                            if ((game_winner_first_win(groups[g].teams[t1].id, groups[g].teams[t3].id)) &&
-                                    (game_winner_first_win(groups[g].teams[t3].id, groups[g].teams[t2].id)) &&
-                                    (game_winner_first_win(groups[g].teams[t2].id, groups[g].teams[t1].id)))
+                            if ((game_winner_first_win(groups[group].teams[t1].id, groups[group].teams[t3].id)) &&
+                                    (game_winner_first_win(groups[group].teams[t3].id, groups[group].teams[t2].id)) &&
+                                    (game_winner_first_win(groups[group].teams[t2].id, groups[group].teams[t1].id)))
                             {
                                 LOGT("Error");
                             }
