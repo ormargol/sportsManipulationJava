@@ -30,6 +30,7 @@ class league {
     private static final int GROUPS_NUM = TEAMS_NUM / GROUP_SIZE;
     private static final int LOG_LVL_DEBUG = 2;
     private static final int LOG_LVL_TEST = 1;
+    private static final int LOG_LVL_SYSTEM = 0;
     private static final int SCORE_FOR_WINNING = 3;
     private static int debug_level;
 
@@ -45,6 +46,10 @@ class league {
 
     private static void LOGT(final String in, final Object... args) {
         LOG(LOG_LVL_TEST, in, args);
+    }
+
+    private static void LOGS(final String in, final Object... args) {
+        LOG(LOG_LVL_SYSTEM, in, args);
     }
 
     group[] groups;
@@ -139,6 +144,9 @@ class league {
         return false;
     }
 
+    static int circlesCounter = 0;
+    boolean isCircleFound = false;
+
     private int calculate_groups_scores() {
         int g, t1, t2, t3, group;
         team temp;
@@ -161,14 +169,22 @@ class league {
                             (first_team_best_score(groups[group].teams[t2], groups[group].teams[t3])) &&
                                     (first_team_best_score(groups[group].teams[t3], groups[group].teams[t1])))
                             {
-                                LOGT("Error");
+                                circlesCounter++;
+                                if (!isCircleFound) {
+                                    isCircleFound = true;
+                                    LOGS("Circle Error at group " + g + ": " + t1 + " > " + t2 + " > " + t3 + " > " + t1);
+                                }
                             }
 
                             if ((first_team_best_score(groups[group].teams[t1], groups[group].teams[t3])) &&
                                     (first_team_best_score(groups[group].teams[t3], groups[group].teams[t2])) &&
                                     (first_team_best_score(groups[group].teams[t2], groups[group].teams[t1])))
                             {
-                                LOGT("Error");
+                                circlesCounter++;
+                                if (!isCircleFound) {
+                                    isCircleFound = true;
+                                    LOGS("Circle Error at group " + g + ": " + t1 + " > " + t3 + " > " + t2 + " > " + t1);
+                                }
                             }
                         }
                     }
@@ -290,6 +306,7 @@ class sportsManipulation {
                 }
             }
             System.out.println("passed " + passedTestCases + " tests out of " + testCases);
+            System.out.println("circle errors: " + league.circlesCounter);
         }
     }
 
