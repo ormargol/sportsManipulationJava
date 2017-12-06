@@ -145,7 +145,7 @@ class league {
     }
 
     static int circlesCounter = 0;
-    boolean isCircleFound = false;
+    static boolean isCircleFound = false;
 
     private int calculate_groups_scores() {
         int g, t1, t2, t3, group;
