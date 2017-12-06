@@ -152,7 +152,7 @@ class league {
     static boolean isCircleFound = false;
 
     private int calculate_groups_scores() {
-        int g, t1, t2, t3;
+        int g, t1, t2, t3, t4;
         team temp;
         for (g = 0; g < GROUPS_NUM; g++) {
             LOGD("GROUP %d - calculate winners:\n", g);
@@ -191,6 +191,30 @@ class league {
                         }
                     }
                 }
+            }
+            int index;
+            int four_circles[][] = {{0, 1, 2, 3},
+						              {0, 1, 3, 2},
+						              {0, 2, 1, 3},
+						              {0, 2, 3, 1},
+						              {0, 3, 1, 2},
+						              {0, 3, 2, 1}};
+            for (index = 0; index < 6; index++) {
+	            t1 = four_circles[index][0];
+	            t2 = four_circles[index][1];
+	            t3 = four_circles[index][2];
+	            t4 = four_circles[index][3];
+	            if (first_team_best_score(groups[g].teams[t1], groups[g].teams[t2]) &&
+		            first_team_best_score(groups[g].teams[t2], groups[g].teams[t3]) &&
+		            first_team_best_score(groups[g].teams[t3], groups[g].teams[t4]) &&
+		            first_team_best_score(groups[g].teams[t4], groups[g].teams[t1]))
+	            {
+		            circlesCounter++;
+		            if (!isCircleFound) {
+			            isCircleFound = true;
+			            LOGS("Circle Error at group" + g + ": " + t1 + " > " + t2 + " > " + t3 + " > " + t4 + " > " + t1);
+		            }
+	            }
             }
 
             LOGD("\n");
