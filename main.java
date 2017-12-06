@@ -7,10 +7,12 @@ import java.util.Scanner;
 class team {
     int id;
     int score;
+    boolean wasManipulated;
 
     team(int n_id) {
         id = n_id;
         score = 0;
+        wasManipulated = false;
     }
 }
 
@@ -95,23 +97,25 @@ class league {
         return 0;
     }
 
-    private Boolean game_winner_first_win(int tm1, int tm2) {
-        if (positive_manipulators[tm1][tm2] == true) {
-            LOGD("%d wins %d due to manipulation\n", tm2, tm1);
+    private Boolean game_winner_first_win(team tm1, team tm2) {
+        if (positive_manipulators[tm1.id][tm2.id] == true) {
+            LOGD("%d wins %d due to manipulation\n", tm2.id, tm1.id);
+            tm2.wasManipulated = true;
             return false;
         }
-        if (positive_manipulators[tm2][tm1] == true) {
-            LOGD("%d wins %d due to manipulation\n", tm1, tm2);
+        if (positive_manipulators[tm2.id][tm1.id] == true) {
+            LOGD("%d wins %d due to manipulation\n", tm1.id, tm2.id);
+            tm1.wasManipulated = true;
             return true;
         }
         //TODO:  what about scores ???
         //TODO: no consistent rule for 3 with same score that have circle by this func: 1 before 2, 2 before 3, 3 before 1!
 
-        if (strength_graph[tm1][tm2] == true) {
-            LOGD("%d wins %d due to strength\n", tm1, tm2);
+        if (strength_graph[tm1.id][tm2.id] == true) {
+            LOGD("%d wins %d due to strength\n", tm1.id, tm2.id);
             return true;
         }
-        LOGD("%d wins %d due to strength\n", tm2, tm1);
+        LOGD("%d wins %d due to strength\n", tm2.id, tm1.id);
         return false;
     }
 
@@ -124,11 +128,11 @@ class league {
             LOGD("%d before %d due to score\n", tm2.id, tm1.id);
             return false;
         }
-        if (positive_manipulators[tm1.id][tm2.id] == true) {
+        if (tm2.wasManipulated == true) {
             LOGD("%d before %d due to manipulation\n", tm2.id, tm1.id);
             return false;
         }
-        if (positive_manipulators[tm2.id][tm1.id] == true) {
+        if (tm1.wasManipulated == true) {
             LOGD("%d before %d due to manipulation\n", tm1.id, tm2.id);
             return true;
         }
@@ -154,7 +158,7 @@ class league {
             LOGD("GROUP %d - calculate winners:\n", g);
             for (t1 = 0; t1 < GROUP_SIZE; t1++) {
                 for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
-                    if (game_winner_first_win(groups[g].teams[t1].id, groups[g].teams[t2].id) == true) {
+                    if (game_winner_first_win(groups[g].teams[t1], groups[g].teams[t2]) == true) {
                         groups[g].teams[t1].score += SCORE_FOR_WINNING;
                     } else {
                         groups[g].teams[t2].score += SCORE_FOR_WINNING;
@@ -227,7 +231,7 @@ class league {
         int left_teams;
         for (left_teams = GROUPS_NUM * 2; left_teams > 1; left_teams /= 2) {
             for (t = 0; t < left_teams / 2; t++) {
-                if (game_winner_first_win(tree_teams[2 * t].id, tree_teams[2 * t + 1].id) == true) {
+                if (game_winner_first_win(tree_teams[2 * t], tree_teams[2 * t + 1]) == true) {
                     tree_teams[t] = tree_teams[2 * t];
                 } else {
                     tree_teams[t] = tree_teams[2 * t + 1];
