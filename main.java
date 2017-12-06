@@ -1,3 +1,12 @@
+/* now all works without known bug.
+ * there are left few limitations for the algorithm and its tests:
+ * 1. 8 teams exactly.
+ * 2. teams grouped to exactly 2 groups.
+ * 3. teams strength generated so that if a > b and b > c ==> a > c.
+ * 4. the groups are sorted so the stronger four are on seperate group than the weaker four.
+
+if some of those limitations is problematic then we need to add tests for it (there will be surely bugs). */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
