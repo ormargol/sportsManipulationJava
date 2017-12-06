@@ -152,7 +152,7 @@ class league {
     static boolean isCircleFound = false;
 
     private int calculate_groups_scores() {
-        int g, t1, t2, t3, group;
+        int g, t1, t2, t3;
         team temp;
         for (g = 0; g < GROUPS_NUM; g++) {
             LOGD("GROUP %d - calculate winners:\n", g);
@@ -165,30 +165,28 @@ class league {
                     }
                 }
             }
-            for (group = 0; group < GROUPS_NUM; group++) {
-                for (t1 = 0; t1 < GROUP_SIZE; t1++) {
-                    for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
-                        for (t3 = t2 + 1; t3 < GROUP_SIZE; t3++) {
-                            if ((first_team_best_score(groups[group].teams[t1], groups[group].teams[t2])) &&
-                            (first_team_best_score(groups[group].teams[t2], groups[group].teams[t3])) &&
-                                    (first_team_best_score(groups[group].teams[t3], groups[group].teams[t1])))
-                            {
-                                circlesCounter++;
-                                if (!isCircleFound) {
-                                    isCircleFound = true;
-                                    LOGS("Circle Error at group " + g + ": " + t1 + " > " + t2 + " > " + t3 + " > " + t1);
-                                }
+            for (t1 = 0; t1 < GROUP_SIZE; t1++) {
+                for (t2 = t1 + 1; t2 < GROUP_SIZE; t2++) {
+                    for (t3 = t2 + 1; t3 < GROUP_SIZE; t3++) {
+                        if ((first_team_best_score(groups[g].teams[t1], groups[g].teams[t2])) &&
+                        (first_team_best_score(groups[g].teams[t2], groups[g].teams[t3])) &&
+                                (first_team_best_score(groups[g].teams[t3], groups[g].teams[t1])))
+                        {
+                            circlesCounter++;
+                            if (!isCircleFound) {
+                                isCircleFound = true;
+                                LOGS("Circle Error at group " + g + ": " + t1 + " > " + t2 + " > " + t3 + " > " + t1);
                             }
+                        }
 
-                            if ((first_team_best_score(groups[group].teams[t1], groups[group].teams[t3])) &&
-                                    (first_team_best_score(groups[group].teams[t3], groups[group].teams[t2])) &&
-                                    (first_team_best_score(groups[group].teams[t2], groups[group].teams[t1])))
-                            {
-                                circlesCounter++;
-                                if (!isCircleFound) {
-                                    isCircleFound = true;
-                                    LOGS("Circle Error at group " + g + ": " + t1 + " > " + t3 + " > " + t2 + " > " + t1);
-                                }
+                        if ((first_team_best_score(groups[g].teams[t1], groups[g].teams[t3])) &&
+                                (first_team_best_score(groups[g].teams[t3], groups[g].teams[t2])) &&
+                                (first_team_best_score(groups[g].teams[t2], groups[g].teams[t1])))
+                        {
+                            circlesCounter++;
+                            if (!isCircleFound) {
+                                isCircleFound = true;
+                                LOGS("Circle Error at group " + g + ": " + t1 + " > " + t3 + " > " + t2 + " > " + t1);
                             }
                         }
                     }
